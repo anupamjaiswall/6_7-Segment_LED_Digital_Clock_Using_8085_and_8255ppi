@@ -9,12 +9,12 @@
 ; port C for second displays.                                                                                                     ;
 ;                                                                                                                                 ;
 ; Here I'm using B, C, D, E, H, and L registers for counter.                                                                      ;
-; counter B for : Left part of Hour                                                                                               ;
-; counter C for : Right part of Hour                                                                                              ;
-; counter D for : Left part of Minute                                                                                             ;
-; counter E for : Right part of Minute                                                                                            ;
-; counter H for : Left part of Second                                                                                             ;
-; counter L for : Right part of Second                                                                                            ;
+; B for : Left LED segment of Hour                                                                                                ;
+; C for : Right LED segment of Hour                                                                                               ;
+; D for : Left LED segment of Minute                                                                                              ;
+; E for : Right LED segment of Minute                                                                                             ;
+; H for : Left LED segment of Second                                                                                              ;
+; L for : Right LED segment of Second                                                                                             ;
 ;                                                                                                                                 ;
 ;       Port-A               Port-B               Port-C                                                                          ;
 ;       0   0      :         0   0        :       0   0                                                                           ;
@@ -24,6 +24,17 @@
 ; Port B   : 21H                                                                                                                  ;
 ; Port C   : 22H                                                                                                                  ;
 ; Port CWR : 23H                                                                                                                  ;
+;                                                                                                                                 ;
+; SECR              : Right segment of second's LED                                                                               ;
+; SECL              : Left segment of second's LED                                                                                ;
+; ADDITION10SECL    : Add 10 in second's left LED segment                                                                         ;
+; INRMINUTE         : Increment minute                                                                                            ;
+; MINUTEL           : Left segment of Minute's LED                                                                                ;
+; ADD10MINUTEL      : Add 10 in Minute's left LED segment                                                                         ;
+; INRHOUR           : Increment Hour                                                                                              ;
+; HOURL             : Left segment of Hour's LED                                                                                  ;
+; ADD10HOURL        : Add 10 in Hour's left LED segment                                                                           ;
+;                                                                                                                                 ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 MVI A, 80H
@@ -56,7 +67,7 @@ SECR:
   JMP DELAY1SECOND; it will call a DELAY1SEOND subroutine that will create a delay for a second
   
 SECL:
-  SECR; SECR function is incrementing values in L register and calling Delay function.
+  JMP SECR; SECR function is incrementing values in L register and calling Delay function.
   
   ;H rigister is containg only values in multiples of 10.
   
