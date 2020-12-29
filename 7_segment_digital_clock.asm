@@ -4,6 +4,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Problem: Write an assembly language program (for 8085) to display a digital clock using 6 seven segment LEDs and PPI 8255.      ;
+;Without using daa instruction                                                                                                    ;
 ; Use port A for hour displays,                                                                                                   ;
 ; port B for minute displays and                                                                                                  ;
 ; port C for second displays.                                                                                                     ;
@@ -42,10 +43,10 @@ OUT 23H; setting up ppi 8255 to work in i/o mode
 JMP LOOP
 
 ; Loop to blink the LEDs for lifetime
-LOOP:
+
 
   ; Initializing every register with 0 so that if there any data exist in the register will be overwritten with 0
-  MVI A, 00H
+  LOOP: MVI A, 00H
   MOV B,A
   MOV C,A
   MOV D,A
@@ -62,12 +63,10 @@ LOOP:
   
   JMP SECL; This function is responsible for both seconds LED segment
   
-SECR: 
-  INR L
+SECR: INR L
   JMP DELAY1SECOND; it will call a DELAY1SEOND subroutine that will create a delay for a second
   
-SECL:
-  JMP SECR; SECR function is incrementing values in L register and calling Delay function.
+SECL: JMP SECR; SECR function is incrementing values in L register and calling Delay function.
   
   ;H rigister is containg only values in multiples of 10.
   
@@ -80,8 +79,7 @@ SECL:
   OUT 22H; seconds will be printed.
   JMP SECL; to continue in seonds.
   
-ADDITION10SECL:
-  MOV A, H
+ADDITION10SECL: MOV A, H
   ADI 10H
   MOV H, A
   MVI L, 00H; setting up L register to 00
@@ -90,15 +88,13 @@ ADDITION10SECL:
   OUT 22H
   JMP SECL
   
-INRMINUTE:
-  INR E
+INRMINUTE: INR E
   MVI H, 00H
   MVI L, 00H
   JMP MINUTEL; 
   RET
   
-MINUTEL:
-  MOV A, D
+MINUTEL:  MOV A, D
   ADD E
   
   CPI E, 09H
@@ -107,8 +103,7 @@ MINUTEL:
   OUT 21H; to lightup minute LED
   RET
   
-ADD10MINUTEL:
-  MOV A, D
+ADD10MINUTEL:  MOV A, D
   ADI 10H
   MOV D, A
   MVI E 00H
@@ -116,15 +111,13 @@ ADD10MINUTEL:
   OUT 21H
   JZ INRHOUR
   
-INRHOUR: 
-  INR C
+INRHOUR:  INR C
   MVI D, 00H
   MVI E, 00H
   JMP HOURL
   RET
   
-HOURL:
-  MOV A, B
+HOURL:  MOV A, B
   ADD C
   CPI A, 24H
   JZ LOOP
@@ -132,8 +125,7 @@ HOURL:
   JZ ADD10HOURL
   OUT 20H
   
-ADD10HOURL:
-  MOV A, B
+ADD10HOURL:  MOV A, B
   ADI 10H
   MOV B, A
   MVI C, 00H
